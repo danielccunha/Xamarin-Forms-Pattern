@@ -1,4 +1,8 @@
-﻿using Xamarin.Forms;
+﻿using MyProject.Bootstrap;
+using MyProject.Contracts.Services.General;
+using MyProject.Views;
+using System.Threading.Tasks;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -6,26 +10,19 @@ namespace MyProject
 {
     public partial class App : Application
     {
-        public App()
+        public App(AppSetup setup)
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            AppContainer.Container = setup.CreateContainer();
+
+            InitializeNavigation();
         }
 
-        protected override void OnStart()
+        private async void InitializeNavigation()
         {
-            // Handle when your app starts
-        }
-
-        protected override void OnSleep()
-        {
-            // Handle when your app sleeps
-        }
-
-        protected override void OnResume()
-        {
-            // Handle when your app resumes
+            var navigationService = AppContainer.Resolve<INavigationService>();
+            await navigationService.InitializeAsync();
         }
     }
 }

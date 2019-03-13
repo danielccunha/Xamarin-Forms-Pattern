@@ -26,7 +26,6 @@ Coding patterns for developing Xamarin.Forms applications. This document was dev
 	- Enumerations
 	- Exceptions
 	- Extensions
-	- Helpers
 	- Models
 	- Persistence
 		- Repositories
