@@ -9,22 +9,30 @@ namespace MyProject.Services.General
 {
     public class SettingsService : ISettingsService
     {
-        private static IDictionary<string, object> Properties => Application.Current.Properties;
+        private static IDictionary<string, object> Settings => Application.Current.Properties;
 
         public void Clear()
         {
-            Properties.Clear();
+            Settings.Clear();
             Save();
         }
 
-        public bool ContainsKey(string key) => Properties.ContainsKey(key);
+        public bool ContainsKey(string key) => Settings.ContainsKey(key);
 
-        public object Get(string key)
+        public T Get<T>(string key)
         {
             if (!ContainsKey(key))
-                throw new ArgumentException($"There is no key called \"{key}\".");
+                return default(T);
 
-            return Properties[key];
+            return (T)Settings[key];
+        }
+
+        public T Get<T>(string key, T defaultValue = default(T))
+        {
+            if (!ContainsKey(key))
+                return defaultValue;
+
+            return (T)Settings[key];
         }
 
         public bool Remove(string key)
@@ -32,7 +40,7 @@ namespace MyProject.Services.General
             if (!ContainsKey(key))
                 throw new ArgumentException($"There is no key called \"{key}\".");
 
-            if (Properties.Remove(key))
+            if (Settings.Remove(key))
             {
                 Save();
                 return true;
@@ -56,9 +64,9 @@ namespace MyProject.Services.General
         public void Set(string key, object value)
         {
             if (ContainsKey(key))
-                Properties.Remove(key);
+                Settings.Remove(key);
 
-            Properties.Add(key, value);
+            Settings.Add(key, value);
             Save();
         }
     }

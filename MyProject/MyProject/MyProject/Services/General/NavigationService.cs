@@ -46,8 +46,6 @@ namespace MyProject.Services.General
         private void CreatePageViewModelMappings()
         {
             _mappings.Add(typeof(MainViewModel), typeof(MainPage));
-            _mappings.Add(typeof(AboutViewModel), typeof(AboutPage));
-            _mappings.Add(typeof(ModalViewModel), typeof(ModalPage));
         }
 
         public Task InitializeAsync()

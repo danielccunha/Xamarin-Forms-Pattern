@@ -6,7 +6,8 @@ namespace MyProject.Contracts.Services.General
     {
         void Clear();
         bool ContainsKey(string key);
-        object Get(string key);
+        T Get<T>(string key);
+        T Get<T>(string key, T defaultValue = default(T));
         bool Remove(string key);
         void Set(string key, object value);
     }

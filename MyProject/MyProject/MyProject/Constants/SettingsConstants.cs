@@ -1,6 +1,6 @@
 ﻿namespace MyProject.Constants
 {
-    public static class SetttingsConstants
+    public static class SettingsConstants
     {
     }
 }

@@ -19,8 +19,6 @@ namespace MyProject.Bootstrap
         {
             // ViewModels
             builder.RegisterType<MainViewModel>().SingleInstance();
-            builder.RegisterType<AboutViewModel>().SingleInstance();
-            builder.RegisterType<ModalViewModel>().SingleInstance();
 
             // Services - General
             builder.RegisterType<DependencyService>().As<IDependencyService>();
