@@ -7,7 +7,7 @@ namespace MyProject.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public partial class AppDelegate : Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
@@ -18,10 +18,19 @@ namespace MyProject.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.Init();
+            InitializeLibraries();
+
+            Xamarin.Forms.Forms.Init();
+            Xamarin.Forms.FormsMaterial.Init();
+
             LoadApplication(new App(new Setup()));
 
             return base.FinishedLaunching(app, options);
+        }
+
+        private static void InitializeLibraries()
+        {
+            Rg.Plugins.Popup.Popup.Init();
         }
     }
 }

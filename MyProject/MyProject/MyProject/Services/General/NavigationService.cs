@@ -1,18 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using MyProject.Bootstrap;
 using MyProject.Contracts.Services.General;
 using MyProject.ViewModels;
 using MyProject.ViewModels.Base;
 using MyProject.Views;
+using Rg.Plugins.Popup.Contracts;
+using Rg.Plugins.Popup.Pages;
+using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 
 namespace MyProject.Services.General
 {
     public class NavigationService : INavigationService
     {
+        /// <summary>
+        /// Dictionary used for mapping ViewModels and its Views
+        /// </summary>
         private readonly Dictionary<Type, Type> _mappings;
+
+        /// <summary>
+        /// Navigation stack of the MainPage
+        /// </summary>
+        private INavigation Navigation => (CurrentApplication.MainPage.GetType() == typeof(NavigationPage))
+            ? ((NavigationPage)Application.Current.MainPage).Navigation
+            : ((NavigationPage)((MasterDetailPage)Application.Current.MainPage).Detail).Navigation;
+
+        /// <summary>
+        /// Popup Navigation stack
+        /// </summary>
+        private IPopupNavigation PopupNavigation => Rg.Plugins.Popup.Services.PopupNavigation.Instance;
 
         protected Application CurrentApplication => Application.Current;
 
@@ -25,11 +46,8 @@ namespace MyProject.Services.General
         private void CreatePageViewModelMappings()
         {
             _mappings.Add(typeof(MainViewModel), typeof(MainPage));
-        }
-
-        public Task ClearBackStack()
-        {
-            throw new NotImplementedException();
+            _mappings.Add(typeof(AboutViewModel), typeof(AboutPage));
+            _mappings.Add(typeof(ModalViewModel), typeof(ModalPage));
         }
 
         public Task InitializeAsync()
@@ -37,9 +55,12 @@ namespace MyProject.Services.General
             return NavigateToAsync<MainViewModel>();
         }
 
-        public Task NavigateBackAsync()
+        public async Task NavigateBackAsync()
         {
-            throw new NotImplementedException();
+            if (PopupNavigation.PopupStack.Count > 0)
+                await PopupNavigation.PopAsync();
+            else
+                await Navigation.PopAsync();
         }
 
         public Task NavigateToAsync<TViewModel>() where TViewModel : ViewModelBase
@@ -49,31 +70,43 @@ namespace MyProject.Services.General
 
         public Task NavigateToAsync<TViewModel>(object parameter) where TViewModel : ViewModelBase
         {
-            throw new NotImplementedException();
+            return InternalNavigateToAsync(typeof(TViewModel), parameter);
         }
 
         public Task NavigateToAsync(Type viewModelType)
         {
-            throw new NotImplementedException();
+            return InternalNavigateToAsync(viewModelType, null);
         }
 
         public Task NavigateToAsync(Type viewModelType, object parameter)
         {
-            throw new NotImplementedException();
+            return InternalNavigateToAsync(viewModelType, parameter);
         }
 
         protected virtual async Task InternalNavigateToAsync(Type viewModelType, object parameter)
         {
-            // TODO: Implement NavigationService as in the base project
             Page page = CreateAndBindPage(viewModelType);
+            bool isPopupPage = page is PopupPage;
+
+            // It's not allowed to push a ContentPage after a PopupPage
+            if (!isPopupPage && PopupNavigation.PopupStack.Count > 0)
+            {
+                (page.BindingContext as ViewModelBase).Dispose();
+                page = null;
+                return;
+            }
 
             if (page is MainPage)
             {
                 CurrentApplication.MainPage = new NavigationPage(page);
             }
-            else if (CurrentApplication.MainPage is MainPage)
+            else if (isPopupPage)
             {
-                await (CurrentApplication.MainPage as NavigationPage).PushAsync(page);
+                await PopupNavigation.PushAsync(page as PopupPage);
+            }
+            else
+            {
+                await Navigation.PushAsync(page);
             }
 
             await (page.BindingContext as ViewModelBase).InitializeAsync(parameter);
@@ -81,7 +114,6 @@ namespace MyProject.Services.General
 
         private Page CreateAndBindPage(Type viewModelType)
         {
-            // TODO: Change it to receive parameters
             Type pageType = GetPageTypeForViewModel(viewModelType);
 
             if (pageType == null)
@@ -102,14 +134,28 @@ namespace MyProject.Services.General
             return _mappings[viewModelType];
         }
 
-        public Task PopToRootAsync()
+        public async Task PopToRootAsync()
         {
-            throw new NotImplementedException();
+            if (PopupNavigation.PopupStack.Count > 0)
+                await PopupNavigation.PopAllAsync();
+
+            await Navigation.PopToRootAsync();
         }
 
-        public Task RemoveLastFromBackStackAsync()
+        public async Task RemoveLastFromBackStackAsync()
         {
-            throw new NotImplementedException();
+            int popupCount = PopupNavigation.PopupStack.Count;
+
+            if (popupCount >= 2)
+            {
+                var page = PopupNavigation.PopupStack[popupCount - 2];
+                await PopupNavigation.RemovePageAsync(page);
+            }
+            else if (popupCount == 0 && Navigation.NavigationStack.Count >= 2)
+            {
+                var page = Navigation.NavigationStack[Navigation.NavigationStack.Count - 2];
+                Navigation.RemovePage(page);
+            }
         }
     }
 }

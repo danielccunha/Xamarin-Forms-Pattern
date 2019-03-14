@@ -1,5 +1,6 @@
 ﻿using MyProject.ViewModels.Base;
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace MyProject.Contracts.Services.General
@@ -13,8 +14,6 @@ namespace MyProject.Contracts.Services.General
         Task NavigateToAsync<TViewModel>(object parameter) where TViewModel : ViewModelBase;
 
         Task NavigateToAsync(Type viewModelType);
-
-        Task ClearBackStack();
 
         Task NavigateToAsync(Type viewModelType, object parameter);
 
