@@ -23,8 +23,10 @@ namespace MyProject.Bootstrap
             builder.RegisterType<ModalViewModel>().SingleInstance();
 
             // Services - General
-            builder.RegisterType<NavigationService>().As<INavigationService>();
+            builder.RegisterType<DependencyService>().As<IDependencyService>();
             builder.RegisterType<DialogService>().As<IDialogService>();
+            builder.RegisterType<NavigationService>().As<INavigationService>();
+            builder.RegisterType<SettingsService>().As<ISettingsService>();
         }
     }
 }

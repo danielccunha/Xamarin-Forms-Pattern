@@ -59,6 +59,8 @@ Coding patterns for developing Xamarin.Forms applications. This document was dev
 - AutoFac
 - NUnit
 - Microsoft.EntityFrameworkCore.Sqlite
+- Rg.Plugins.Popups
+- Acr.UserDialogs
 
 ## References
 - [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)

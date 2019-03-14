@@ -15,12 +15,9 @@ namespace MyProject.ViewModels
 
         }        
 
-        private async void PopModal()
+        private void PopModal()
         {
-            await NavigationService.NavigateToAsync<ModalViewModel>();
-            await NavigationService.NavigateToAsync<ModalViewModel>();
-            await NavigationService.NavigateToAsync<ModalViewModel>();
-            await NavigationService.NavigateToAsync<ModalViewModel>();
+            DialogService.ShowToast("Some message");
         }
     }
 }

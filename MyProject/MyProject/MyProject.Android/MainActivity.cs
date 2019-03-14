@@ -25,6 +25,7 @@ namespace MyProject.Droid
         private void InitializeLibraries(Bundle bundle)
         {
             Rg.Plugins.Popup.Popup.Init(this, bundle);
+            Acr.UserDialogs.UserDialogs.Init(this);
         }
     }
 }

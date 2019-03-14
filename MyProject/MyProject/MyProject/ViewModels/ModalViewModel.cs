@@ -16,6 +16,7 @@ namespace MyProject.ViewModels
 
         private async void BoxTapped()
         {
+            await DialogService.DisplayAlertAsync("Title", "Message", "Ok");
             await NavigationService.NavigateBackAsync();
         }
     }
