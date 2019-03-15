@@ -2,18 +2,33 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MyProject.Views.MainPage"
+             x:Name="Page"
              Visual="Material"
-             Padding="16">
+             Title="Products">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add" Command="{Binding AddCommand}" />
+    </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
-        <StackLayout VerticalOptions="CenterAndExpand"
-                     HorizontalOptions="FillAndExpand">            
-            <Label Text="Welcome to Xamarin.Forms!" 
-                   HorizontalTextAlignment="Center" />            
-            
-            <Button Text="Pop Modal"
-                    Command="{Binding PopModalCommand}"/>
-        </StackLayout>
+        <ListView ItemsSource="{Binding Products}"
+                  SelectionMode="None"
+                  VerticalScrollBarVisibility="Never"
+                  Margin="10">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Name}"
+                              Detail="{Binding Price, Converter={StaticResource CurrencyConverter}}"
+                              Height="50">
+                        <TextCell.ContextActions>
+                            <MenuItem Text="Remove" 
+                                      Command="{Binding BindingContext.RemoveProductCommand, Source={x:Reference Page}}"
+                                      CommandParameter="{Binding .}"/>
+                        </TextCell.ContextActions>
+                    </TextCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </ContentPage.Content>
     
 </ContentPage>

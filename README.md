@@ -58,7 +58,7 @@ Coding patterns for developing Xamarin.Forms applications. This document was dev
 ## Packages
 - AutoFac
 - NUnit
-- Microsoft.EntityFrameworkCore.Sqlite
+- Sqlite
 - Rg.Plugins.Popups
 - Acr.UserDialogs
 

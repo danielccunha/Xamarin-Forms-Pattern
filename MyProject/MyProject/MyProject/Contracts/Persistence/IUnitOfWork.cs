@@ -1,11 +1,10 @@
-﻿using System;
+﻿using MyProject.Contracts.Persistence.Repositories;
+using System;
 
 namespace MyProject.Contracts.Persistence
 {
     public interface IUnitOfWork : IDisposable
     {
-        // TODO: Add repositories
-
-        int Complete();
+        IProductRepository Products { get; }
     }
 }

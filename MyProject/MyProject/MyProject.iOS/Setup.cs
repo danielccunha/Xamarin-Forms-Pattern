@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using MyProject.Bootstrap;
+using MyProject.Contracts.Persistence;
+using MyProject.iOS.Persistence;
 
 namespace MyProject.iOS
 {
@@ -9,7 +11,8 @@ namespace MyProject.iOS
         {
             base.RegisterDependencies(builder);
 
-            // TODO: Register services
+            // Persistence
+            builder.RegisterType<DatabasePathProvider>().As<IDatabasePathProvider>();
         }
     }
 }

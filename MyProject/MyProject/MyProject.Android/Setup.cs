@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using MyProject.Bootstrap;
+using MyProject.Contracts.Persistence;
+using MyProject.Droid.Persistence;
 
 namespace MyProject.Droid
 {
@@ -9,7 +11,8 @@ namespace MyProject.Droid
         {
             base.RegisterDependencies(builder);
 
-            // TODO: Register services
+            // Persistence
+            builder.RegisterType<DatabasePathProvider>().As<IDatabasePathProvider>();
         }
     }
 }
