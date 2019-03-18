@@ -1,5 +1,6 @@
-﻿using MyProject.UnitTests.Mocks.Persistence;
-using MyProject.UnitTests.Mocks.Services;
+﻿using MyProject.UnitTests.Base;
+using MyProject.UnitTests.Mocks.Persistence;
+using MyProject.UnitTests.Mocks.Services.General;
 using MyProject.ViewModels;
 using NUnit.Framework;
 using System.Linq;
@@ -7,13 +8,11 @@ using System.Threading.Tasks;
 
 namespace MyProject.UnitTests.ViewModels
 {
-    [TestFixture]
-    public class MainViewModelTests
+    public class MainViewModelTests : BaseTestFixture
     {
         private MainViewModel ViewModel { get; set; }
 
-        [SetUp]
-        public async Task SetUp()
+        public override async Task BeforeEachTestAsync()
         {
             ViewModel = new MainViewModel(new MockDialogService(), new MockNavigationService(), new MockUnitOfWork());
             await ViewModel.InitializeAsync(null);

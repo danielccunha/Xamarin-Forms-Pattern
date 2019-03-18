@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Acr.UserDialogs;
 using MyProject.Contracts.Services.General;
 
-namespace MyProject.UnitTests.Mocks.Services
+namespace MyProject.UnitTests.Mocks.Services.General
 {
     public class MockDialogService : IDialogService
     {

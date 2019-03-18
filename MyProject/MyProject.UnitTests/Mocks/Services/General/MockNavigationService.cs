@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MyProject.Contracts.Services.General;
 using MyProject.ViewModels.Base;
 
-namespace MyProject.UnitTests.Mocks.Services
+namespace MyProject.UnitTests.Mocks.Services.General
 {
     public class MockNavigationService : INavigationService
     {
