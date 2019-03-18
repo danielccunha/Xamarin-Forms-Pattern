@@ -4,17 +4,20 @@
              x:Class="MyProject.Views.MainPage"
              x:Name="Page"
              Visual="Material"
-             Title="Products">
+             Title="Products"
+             AutomationId="ProductsPage">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Command="{Binding AddCommand}" />
+        <ToolbarItem Text="Add" 
+                     Command="{Binding AddCommand}" />
     </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
         <ListView ItemsSource="{Binding Products}"
                   SelectionMode="None"
                   VerticalScrollBarVisibility="Never"
-                  Margin="10">
+                  Margin="10"
+                  AutomationId="ProductsList">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Name}"
@@ -23,7 +26,7 @@
                         <TextCell.ContextActions>
                             <MenuItem Text="Remove" 
                                       Command="{Binding BindingContext.RemoveProductCommand, Source={x:Reference Page}}"
-                                      CommandParameter="{Binding .}"/>
+                                      CommandParameter="{Binding .}" />
                         </TextCell.ContextActions>
                     </TextCell>
                 </DataTemplate>

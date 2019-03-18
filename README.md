@@ -66,6 +66,7 @@ Coding patterns for developing Xamarin.Forms applications. This document was dev
 - [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
 - [BethanysPieShopMobile](https://github.com/GillCleeren/BethanysPieShopMobile)
 - [Entity Framework Core 2.0](http://www.macoratti.net/18/08/xf_efcore1.htm)
+- [Page Object Pattern](https://xamarinhelp.com/page-object-pattern-will-make-better-xamarin-ui-automation-tester/)
 
 ## License
 MIT License.
