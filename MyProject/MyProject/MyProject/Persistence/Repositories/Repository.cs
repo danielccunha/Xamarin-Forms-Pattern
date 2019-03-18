@@ -22,7 +22,6 @@ namespace MyProject.Persistence.Repositories
         {
             await _conn.InsertAsync(entity);
 
-            var count = await _conn.Table<TEntity>().CountAsync();
             var map = await _conn.GetMappingAsync<TEntity>();
 
             if (map.HasAutoIncPK)

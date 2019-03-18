@@ -31,8 +31,6 @@ namespace MyProject.ViewModels
         public override async Task InitializeAsync(object parameter)
         {
             Products = await _unitOfWork.Products.GetAllAsync().ToObservableCollectionAsync();
-
-            await base.InitializeAsync(parameter);
         }
 
         private async void AddProduct()
