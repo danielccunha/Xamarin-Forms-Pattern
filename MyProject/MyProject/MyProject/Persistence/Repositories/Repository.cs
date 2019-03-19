@@ -15,7 +15,7 @@ namespace MyProject.Persistence.Repositories
         public Repository(SQLiteAsyncConnection conn)
         {
             _conn = conn;
-            _conn.CreateTableAsync<TEntity>().Wait();
+            _conn.CreateTableAsync<TEntity>().GetAwaiter();
         }
 
         public async Task<int> AddAsync(TEntity entity)

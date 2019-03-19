@@ -7,6 +7,7 @@ using MyProject.Contracts.Persistence.Domain;
 using MyProject.Contracts.Services.General;
 using MyProject.Extensions;
 using MyProject.ViewModels.Base;
+using MyProject.ViewModels.Base.Commands;
 using Xamarin.Forms;
 
 namespace MyProject.ViewModels
@@ -19,8 +20,8 @@ namespace MyProject.ViewModels
 
         public ObservableCollection<Product> Products { get => _products; set => SetProperty(ref _products, value); }
 
-        public ICommand AddCommand => new Command(AddProduct);
-        public ICommand RemoveProductCommand => new Command<Product>(RemoveProduct);
+        public IAsyncCommand AddProductCommand => new AsyncCommand(AddProduct);
+        public IAsyncCommand RemoveProductCommand => new AsyncCommand<Product>(RemoveProduct);
 
         public MainViewModel(IDialogService dialogService, INavigationService navigationService, IUnitOfWork unitOfWork)
             : base(dialogService, navigationService)
@@ -33,7 +34,7 @@ namespace MyProject.ViewModels
             Products = await _unitOfWork.Products.GetAllAsync().ToObservableCollectionAsync();
         }
 
-        private async void AddProduct()
+        private async Task AddProduct()
         {
             var product = new Product
             {
@@ -46,7 +47,7 @@ namespace MyProject.ViewModels
             Products.Add(product);
         }
 
-        private async void RemoveProduct(Product product)
+        private async Task RemoveProduct(Product product)
         {
             if (await _unitOfWork.Products.RemoveAsync(product))
             {

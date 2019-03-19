@@ -9,7 +9,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Add" 
-                     Command="{Binding AddCommand}" />
+                     Command="{Binding AddProductCommand}" />
     </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
