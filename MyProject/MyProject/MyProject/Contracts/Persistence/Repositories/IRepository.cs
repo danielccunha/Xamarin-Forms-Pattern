@@ -7,6 +7,8 @@ namespace MyProject.Contracts.Persistence.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
+        Task<int> CountAsync();
+
         Task<TEntity> GetAsync(object pk);
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
@@ -17,6 +19,8 @@ namespace MyProject.Contracts.Persistence.Repositories
 
         Task<bool> RemoveAsync(TEntity entity);
         Task RemoveRangeAsync(IEnumerable<TEntity> entities);
+
+        Task TruncateAsync();
 
         Task<bool> UpdateAsync(TEntity entity);
         Task UpdateRangeAsync(IEnumerable<TEntity> entities);

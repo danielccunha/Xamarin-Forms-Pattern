@@ -35,6 +35,11 @@ namespace MyProject.Persistence.Repositories
             return _conn.InsertAllAsync(entities);
         }
 
+        public Task<int> CountAsync()
+        {
+            return _conn.Table<TEntity>().CountAsync();
+        }
+
         public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await _conn.Table<TEntity>().Where(predicate).ToListAsync();
@@ -64,6 +69,12 @@ namespace MyProject.Persistence.Repositories
         {
             foreach (var entity in entities)
                 await _conn.DeleteAsync(entity);
+        }
+
+        public async Task TruncateAsync()
+        {
+            await _conn.DropTableAsync<TEntity>();
+            await _conn.CreateTableAsync<TEntity>();
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)

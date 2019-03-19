@@ -10,20 +10,23 @@ namespace MyProject.Persistence
     {
         private readonly string _databasePath;
         private readonly SQLiteAsyncConnection _conn;
+        private IProductRepository _products;
 
         public UnitOfWork(IDatabasePathProvider provider)
         {
             _databasePath = provider.GetDatabasePath(PersistenceConstants.DatabaseFilename);
             _conn = new SQLiteAsyncConnection(_databasePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex);
-
-            InitializeRepositories();
         }
 
-        public IProductRepository Products { get; set; }
-
-        private void InitializeRepositories()
+        public IProductRepository Products
         {
-            Products = new ProductRepository(_conn);
+            get
+            {
+                if (_products == null)
+                    _products = new ProductRepository(_conn);
+
+                return _products;
+            }
         }
 
         public async void Dispose()
