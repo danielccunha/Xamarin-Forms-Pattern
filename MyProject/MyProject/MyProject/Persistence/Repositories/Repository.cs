@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MyProject.Contracts.Persistence.Repositories;
+using MyProject.Extensions;
 using SQLite;
 
 namespace MyProject.Persistence.Repositories
@@ -15,7 +15,6 @@ namespace MyProject.Persistence.Repositories
         public Repository(SQLiteAsyncConnection conn)
         {
             _conn = conn;
-            _conn.CreateTableAsync<TEntity>().GetAwaiter();
         }
 
         public async Task<int> AddAsync(TEntity entity)
@@ -73,8 +72,7 @@ namespace MyProject.Persistence.Repositories
 
         public async Task TruncateAsync()
         {
-            await _conn.DropTableAsync<TEntity>();
-            await _conn.CreateTableAsync<TEntity>();
+            await _conn.TruncateAsync<TEntity>();
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)

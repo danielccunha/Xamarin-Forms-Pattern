@@ -1,5 +1,7 @@
-﻿using MyProject.Constants;
+﻿using System.Threading.Tasks;
+using MyProject.Constants;
 using MyProject.Contracts.Persistence;
+using MyProject.Contracts.Persistence.Domain;
 using MyProject.Contracts.Persistence.Repositories;
 using MyProject.Persistence.Repositories;
 using SQLite;
@@ -10,12 +12,14 @@ namespace MyProject.Persistence
     {
         private readonly string _databasePath;
         private readonly SQLiteAsyncConnection _conn;
+
+        private bool _initialized;
         private IProductRepository _products;
 
         public UnitOfWork(IDatabasePathProvider provider)
         {
             _databasePath = provider.GetDatabasePath(PersistenceConstants.DatabaseFilename);
-            _conn = new SQLiteAsyncConnection(_databasePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex);
+            _conn = new SQLiteAsyncConnection(_databasePath, PersistenceConstants.DatabaseFlags);
         }
 
         public IProductRepository Products
@@ -29,10 +33,24 @@ namespace MyProject.Persistence
             }
         }
 
+        public async Task InitializeAsync()
+        {
+            if (_initialized)
+                return;
+
+            await _conn.CreateTableAsync<Product>();
+
+            _initialized = true;
+        }
+
+        public async Task TruncateTables()
+        {
+            await Products.TruncateAsync();
+        }
+
         public async void Dispose()
         {
             await _conn.CloseAsync();
-            _conn.GetConnection().Dispose();
         }
     }
 }

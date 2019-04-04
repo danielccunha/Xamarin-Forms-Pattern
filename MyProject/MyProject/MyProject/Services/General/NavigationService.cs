@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Threading.Tasks;
 using MyProject.Bootstrap;
 using MyProject.Contracts.Services.General;
@@ -11,7 +9,6 @@ using MyProject.ViewModels.Base;
 using MyProject.Views;
 using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Pages;
-using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 
 namespace MyProject.Services.General
@@ -37,15 +34,12 @@ namespace MyProject.Services.General
 
         protected Application CurrentApplication => Application.Current;
 
+        public bool IsMasterPagePresented => CurrentApplication.MainPage is MasterDetailPage;
+
         public NavigationService()
         {
             _mappings = new Dictionary<Type, Type>();
-            CreatePageViewModelMappings();
-        }
-
-        private void CreatePageViewModelMappings()
-        {
-            _mappings.Add(typeof(MainViewModel), typeof(MainPage));
+            AppSetup.CreatePageViewModelMappings(_mappings);
         }
 
         public Task InitializeAsync()
@@ -55,30 +49,34 @@ namespace MyProject.Services.General
 
         public async Task NavigateBackAsync()
         {
+            Page page;
             if (PopupNavigation.PopupStack.Count > 0)
+            {
+                page = PopupNavigation.PopupStack.Last();
                 await PopupNavigation.PopAsync();
+            }
             else
-                await Navigation.PopAsync();
+                page = await Navigation.PopAsync();
+
+            (page.BindingContext as ViewModelBase).Dispose();
         }
 
-        public Task NavigateToAsync<TViewModel>() where TViewModel : ViewModelBase
-        {
-            return InternalNavigateToAsync(typeof(TViewModel), null);
-        }
-
-        public Task NavigateToAsync<TViewModel>(object parameter) where TViewModel : ViewModelBase
+        public Task NavigateToAsync<TViewModel>(object parameter = null) where TViewModel : ViewModelBase
         {
             return InternalNavigateToAsync(typeof(TViewModel), parameter);
         }
 
-        public Task NavigateToAsync(Type viewModelType)
-        {
-            return InternalNavigateToAsync(viewModelType, null);
-        }
-
-        public Task NavigateToAsync(Type viewModelType, object parameter)
+        public Task NavigateToAsync(Type viewModelType, object parameter = null)
         {
             return InternalNavigateToAsync(viewModelType, parameter);
+        }
+
+        public async Task NavigateToAsync(string pageName, object parameter = null)
+        {
+            var pair = _mappings.FirstOrDefault(p => p.Value.Name.Equals(pageName));
+
+            if (pair.Key != null)
+                await InternalNavigateToAsync(pair.Key, parameter);
         }
 
         protected virtual async Task InternalNavigateToAsync(Type viewModelType, object parameter)
@@ -90,7 +88,6 @@ namespace MyProject.Services.General
             if (!isPopupPage && PopupNavigation.PopupStack.Count > 0)
             {
                 (page.BindingContext as ViewModelBase).Dispose();
-                page = null;
                 return;
             }
 
@@ -127,7 +124,7 @@ namespace MyProject.Services.General
         private Type GetPageTypeForViewModel(Type viewModelType)
         {
             if (!_mappings.ContainsKey(viewModelType))
-                throw new KeyNotFoundException($"No map for ${viewModelType} was found on navigation mappings");            
+                throw new KeyNotFoundException($"No map for ${viewModelType} was found on navigation mappings");
 
             return _mappings[viewModelType];
         }
@@ -135,7 +132,15 @@ namespace MyProject.Services.General
         public async Task PopToRootAsync()
         {
             if (PopupNavigation.PopupStack.Count > 0)
+            {
+                for (int index = 1; index < PopupNavigation.PopupStack.Count; index++)
+                    (PopupNavigation.PopupStack[index].BindingContext as ViewModelBase).Dispose();
+
                 await PopupNavigation.PopAllAsync();
+            }
+
+            for (int index = 1; index < Navigation.NavigationStack.Count; index++)
+                (Navigation.NavigationStack[index].BindingContext as ViewModelBase).Dispose();
 
             await Navigation.PopToRootAsync();
         }
@@ -143,17 +148,21 @@ namespace MyProject.Services.General
         public async Task RemoveLastFromBackStackAsync()
         {
             int popupCount = PopupNavigation.PopupStack.Count;
+            Page page = null;
 
             if (popupCount >= 2)
             {
-                var page = PopupNavigation.PopupStack[popupCount - 2];
-                await PopupNavigation.RemovePageAsync(page);
+                page = PopupNavigation.PopupStack[popupCount - 2];
+                await PopupNavigation.RemovePageAsync(page as PopupPage);
             }
             else if (popupCount == 0 && Navigation.NavigationStack.Count >= 2)
             {
-                var page = Navigation.NavigationStack[Navigation.NavigationStack.Count - 2];
+                page = Navigation.NavigationStack[Navigation.NavigationStack.Count - 2];
                 Navigation.RemovePage(page);
             }
+
+            if (page != null)
+                (page.BindingContext as ViewModelBase).Dispose();
         }
     }
 }

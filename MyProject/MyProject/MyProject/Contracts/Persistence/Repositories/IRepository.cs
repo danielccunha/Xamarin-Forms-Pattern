@@ -20,9 +20,9 @@ namespace MyProject.Contracts.Persistence.Repositories
         Task<bool> RemoveAsync(TEntity entity);
         Task RemoveRangeAsync(IEnumerable<TEntity> entities);
 
-        Task TruncateAsync();
-
         Task<bool> UpdateAsync(TEntity entity);
         Task UpdateRangeAsync(IEnumerable<TEntity> entities);
+
+        Task TruncateAsync();
     }
 }

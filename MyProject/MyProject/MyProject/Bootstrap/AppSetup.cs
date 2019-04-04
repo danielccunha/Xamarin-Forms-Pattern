@@ -9,7 +9,7 @@ using MyProject.ViewModels;
 
 namespace MyProject.Bootstrap
 {
-    public class AppSetup
+    public partial class AppSetup
     {
         public IContainer CreateContainer()
         {
