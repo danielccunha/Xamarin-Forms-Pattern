@@ -1,71 +1,11 @@
 # Xamarin.Forms Patterns
-Coding patterns for developing Xamarin.Forms applications. This document was developed based on [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers/tree/dev/src/Mobile), and its purpose is to create a template for any Xamarin.Forms project. The project is basically a **MVVM** project with **Repository Pattern** implemented for local storage (**EF4SQLite**).
+Coding patterns for developing Xamarin.Forms applications. This document was developed based on [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers/tree/dev/src/Mobile) and [BethanysPieShopMobile](https://github.com/GillCleeren/BethanysPieShopMobile). The purpose of this project is to create a template for any Xamarin.Forms project. 
 
-### TODOS
-- [ ] Create a sample project
-
-## Structure
-- Tests
-	- [YourProject].UITests
-	- [YourProject].UnitTests	
-- [YourProject]
-	- Assets
-	- Behaviors
-	- Bootstrap (AppSetup and AppContainer)
-	- Constants (MessagingConstants, ApiConstants, etc...)
-	- Contracts
-		- Persistence
-			- Repositories
-			- IUnitOfWork
-			- ...
-		- Services
-			- General (INavigationService, ISettingsService, IDialogService, IConnectionService)
-			- ...
-	- Controls
-	- Converters
-	- Enumerations
-	- Exceptions
-	- Extensions
-	- Models
-	- Persistence
-		- Repositories
-		- UnitOfWork
-		- ...
-	- Services (same structure of Contracts/Services)
-		- General
-		- ...
-	- Utility
-		- ViewModelLocator
-		- ...
-	- Validations
-	- ViewModels
-		- Base
-			- BindableBase
-			- ViewModelBase
-			- ...
-		- ...
-	- Views
-		- Templates
-		- ...
-- [YourProject].Android
-	- Activities
-	- Renderers
-	- Services
-- [YourProject].iOS
-	- Renderers
-	- Services
-
-## Packages
-- AutoFac
-- NUnit
-- Sqlite
-- Rg.Plugins.Popups
-- Acr.UserDialogs
+The project is basically a **MVVM** project with **Repository Pattern** implemented for local storage using **SQLite**. In the sample project there are also two test projects, one for **Unit Testing** and other for **UI Testing**. In the UI Testing project, I implemented the **Page Object Pattern**, according to Xamarin blogpost.
 
 ## References
 - [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
 - [BethanysPieShopMobile](https://github.com/GillCleeren/BethanysPieShopMobile)
-- [Entity Framework Core 2.0](http://www.macoratti.net/18/08/xf_efcore1.htm)
 - [Page Object Pattern](https://xamarinhelp.com/page-object-pattern-will-make-better-xamarin-ui-automation-tester/)
 
 ## License
